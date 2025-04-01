@@ -21,9 +21,10 @@ class Task:
                 print(f"{i}. {task}")
             print("\n")
             
-    def delete_task(self, task_name):
-        if task_name in self.tasks:
-            self.tasks.remove(task_name)
+    def delete_task(self, id):
+        if 0 <= id - 1 < len(self.tasks):
+            task_name = self.tasks[id - 1]
+            self.tasks.pop(id - 1)
             print(f"\nTask '{task_name}' deleted.\n")
         else:
             print(f"\nTask '{task_name}' not found.\n")
@@ -47,8 +48,8 @@ def main():
             case '2':
                 task_manager.view_tasks()
             case '3':
-                delete_task_name = input("Enter the task name to delete: ")
-                task_manager.delete_task(delete_task_name)
+                delete_task_id = int(input("Enter the task id to delete: "))
+                task_manager.delete_task(delete_task_id)
             case '4':
                 print("Exiting...")
                 break
