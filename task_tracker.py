@@ -7,21 +7,26 @@ class Task:
         self.tasks = []
 
     def add_task(self, task_name):
-        self.tasks.append(task_name)
+        if (task_name != 4):
+            self.tasks.append(task_name)
+        else:
+            return
 
     def view_tasks(self):
         if not self.tasks:
-            print("No tasks available.")
+            print("\nNo tasks available.")
         else:
+            print("\n")
             for i, task in enumerate(self.tasks, start=1):
                 print(f"{i}. {task}")
+            print("\n")
             
     def delete_task(self, task_name):
         if task_name in self.tasks:
             self.tasks.remove(task_name)
-            print(f"Task '{task_name}' deleted.")
+            print(f"\nTask '{task_name}' deleted.\n")
         else:
-            print(f"Task '{task_name}' not found.")
+            print(f"\nTask '{task_name}' not found.\n")
 
 
 
