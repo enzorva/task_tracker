@@ -3,13 +3,12 @@ import json
 
 
 class Task:
-    def __init__(self, tasks_dict, id):
+    def __init__(self, tasks_dict):
         self.tasks_dict = tasks_dict
-        self.id = id
 
     def add_task(self, task_name):
-        self.id += 1
-        self.tasks_dict["tasks"].append({"task": task_name, "id": self.id})
+        id =  len(self.tasks_dict["tasks"]) + 1
+        self.tasks_dict["tasks"].append({"task": task_name, "id": id})
 
         with open('tasks.json', 'w') as f:
             json.dump(self.tasks_dict, f, indent=4)
@@ -25,10 +24,12 @@ class Task:
             print("\n")
             
     def delete_task(self, id):
-        if 0 <= id - 1 < len(self.tasks):
-            task_name = self.tasks[id - 1]
-            self.tasks.pop(id - 1)
+        if 0 <= id - 1 < len(self.tasks_dict["tasks"]):
+            task_name = self.tasks_dict["tasks"].pop(id - 1)["task"]
             print(f"\nTask '{task_name}' deleted.\n")
+
+            with open('tasks.json', 'w') as f:
+                json.dump(self.tasks_dict, f, indent=4)
         else:
             print(f"\nTask '{task_name}' not found.\n")
 
@@ -44,10 +45,7 @@ def main():
     except (FileNotFoundError, json.JSONDecodeError):
         tasks_dict = {"tasks": []}
 
-    id = 0
-    task_manager = Task(tasks_dict, id)
-    
-
+    task_manager = Task(tasks_dict)    
     
     while(True):
         action = input("Enter '1' to add a task, '2' to view tasks, '3' to delete a task, or '4' to exit: ")
@@ -59,8 +57,10 @@ def main():
             case '2':
                 task_manager.view_tasks()
             case '3':
+                task_manager.view_tasks()
                 id = int(input("Enter the task id to delete: "))
                 task_manager.delete_task(id)
+                task_manager.view_tasks()
             case '4':
                 print("Exiting...")
                 break
