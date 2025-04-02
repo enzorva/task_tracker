@@ -20,8 +20,8 @@ class Task:
             print("\nNo tasks found.\n")
         else:
             print("\nTasks:")
-            for i, task in enumerate(self.tasks_dict["tasks"], start=1):
-                print(f"{i}. {task["task"]}")
+            for task in self.tasks_dict["tasks"]:
+                print(f"{task["id"]}. {task["task"]}")
             print("\n")
             
     def delete_task(self, id):

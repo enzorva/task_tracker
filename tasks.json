@@ -1,12 +1,16 @@
 {
     "tasks": [
         {
-            "task": "Limpar",
+            "task": "Lavar o carro",
             "id": 1
         },
         {
-            "task": "Cozinhar",
+            "task": "Lavar a moto",
             "id": 2
+        },
+        {
+            "task": "Lavar a lancha",
+            "id": 3
         }
     ]
 }
