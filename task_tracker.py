@@ -1,7 +1,7 @@
 import pyfiglet
 import json
 import time
-
+from prettytable import PrettyTable
 
 class Task:
     def __init__(self, tasks_dict):
@@ -16,22 +16,28 @@ class Task:
 
 
     def view_tasks(self, status=None):
-        if status is None:  
+        table = PrettyTable()
+        table.field_names = ["ID", "Task", "Status", "Created At", "Updated At"]
+
+        if not self.tasks_dict["tasks"]:  
+            print("\nNo tasks available.\n")
+            return
+
+        if status is None: 
             print("\nAll tasks:")
             for task in self.tasks_dict["tasks"]:
-                print(f"{task['id']}. {task['task']} - {task['status']}")
-            print("\n")
-        else:
-
+                table.add_row([task['id'], task['task'], task['status'], task['created_at'], task['updated_at']])
+        else:  
             filtered_tasks = [task for task in self.tasks_dict["tasks"] if task["status"] == status]
-
-            if not filtered_tasks:
+            if not filtered_tasks:  
                 print(f"\nNo tasks found with status '{status}'.\n")
-            else:
-                print(f"\nTasks with status '{status}':")
-                for task in filtered_tasks:
-                    print(f"{task['id']}. {task['task']} - {task['status']}")
-                print("\n")
+                return
+            print(f"\nTasks with status '{status}':")
+            for task in filtered_tasks:
+                table.add_row([task['id'], task['task'], task['status'], task['created_at'], task['updated_at']])
+
+        print(table)
+        print("\n")
             
     def delete_task(self, id):
         if 0 <= id - 1 < len(self.tasks_dict["tasks"]):
