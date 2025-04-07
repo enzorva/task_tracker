@@ -2,6 +2,7 @@ import pyfiglet
 import json
 import time
 from prettytable import PrettyTable
+import sys
 
 class Task:
     def __init__(self, tasks_dict):
@@ -72,35 +73,56 @@ class Task:
         with open('tasks.json', 'w') as f:
             json.dump(self.tasks_dict, f, indent=4)
 
-    def id_getter(self):
-        try:
-            id = int(input("Enter the task id: "))
-        except ValueError:
-            print("Invalid id. Please enter a number.")
-            return self.id_getter()
-        
-        if 0 <= id - 1 < len(self.tasks_dict["tasks"]):
-            return id
-        else:   
-            print(f"Task with id '{id}' not found.")
-            return self.id_getter()
-        
-    def status_getter(self):
-        status = input("Enter the task status (todo, progress, done or press 'enter' if you want to see all): ").lower()
-        if status not in ["todo", "progress", "done" ,""]:
-            print("Invalid status. Please enter 'todo', 'progress', or 'done'.")
-            return self.status_getter()
-        return status if status != "" else None
+    def action_getter(self):
 
-    def status_setter(self):
-        status = input("Enter the new task status (todo, progress, done: )").lower()
-        if status not in ["todo", "progress", "done"]:
-            print("Invalid status. Please enter 'todo', 'progress', or 'done'.")
-            return self.status_getter()
-        return status 
+        if sys.argv[1] == "add":
+            task_name = sys.argv[2]
+            self.add_task(task_name)
+            self.view_tasks()
+        elif sys.argv[1] == "delete":
+            try:
+                id = int(sys.argv[2])
+                self.delete_task(id)
+                self.view_tasks()
+            except ValueError:
+                print("Invalid id. Please enter a number.")
+        elif sys.argv[1] == "update":
+            try:
+                id = int(sys.argv[2])
+                new_task_name = sys.argv[3]
+                self.update_task(id, new_task_name)
+                self.view_tasks()
+            except ValueError:
+                print("Invalid id. Please enter a number.")
+        elif sys.argv[1] == "mark-in-progress":
+            try:
+                id = int(sys.argv[2])
+                self.update_status(id, "progress")
+                self.view_tasks()
+            except ValueError:
+                print("Invalid id. Please enter a number.")
+        elif sys.argv[1] == "mark-done":
+            try:
+                id = int(sys.argv[2])
+                self.update_status(id, "done")
+                self.view_tasks()
+            except ValueError:
+                print("Invalid id. Please enter a number.")
+        elif sys.argv[1] == "list":
+            if len(sys.argv) == 2:
+                self.view_tasks()
+            elif len(sys.argv) == 3:
+                status = sys.argv[2]
+                if status not in ["todo", "progress", "done"]:
+                    print("Invalid status. Please enter 'todo', 'progress', or 'done'.")
+                else:
+                    self.view_tasks(status)
+        else:
+            print("Invalid action. Please enter 'add', 'delete', 'update', 'mark-in-progress', 'mark-done', or 'list'.")
+           
     
-    # def action_getter(self):
 
+    
 
 def main():
     f = pyfiglet.Figlet(font='small', width=80)
@@ -114,39 +136,7 @@ def main():
 
     task_manager = Task(tasks_dict)    
     
-    while(True):
-        action = input("Enter '1' to add a task, '2' to view tasks, '3' to delete a task, '4' to update a task name, '5' to update a task status, or '6' to exit: ")
-        match action:
-            case '1':
-                task_name = input("Enter the task name: ")
-                task_manager.add_task(task_name)
-                task_manager.view_tasks()
-            case '2':
-                status = task_manager.status_getter()
-                task_manager.view_tasks(status)
-            case '3':
-                task_manager.view_tasks()
-                id = task_manager.id_getter()
-                task_manager.delete_task(id)
-                task_manager.view_tasks()
-            case '4':
-                task_manager.view_tasks()
-                id = task_manager.id_getter()
-                new_name = input("Enter the new task name: ")
-                task_manager.update_task(id, new_name)
-                task_manager.view_tasks()
-            case '5':
-                status = task_manager.status_getter()
-                task_manager.view_tasks(status) 
-                id = task_manager.id_getter()
-                new_status = task_manager.status_setter()
-                task_manager.update_status(id, new_status)
-                task_manager.view_tasks()
-            case '6':
-                print("Exiting...")
-                break
-            case _:
-                print("Invalid option. Please try again.")
+    task_manager.action_getter()
 
 
 main()
