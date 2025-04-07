@@ -15,7 +15,6 @@ class Task:
         with open('tasks.json', 'w') as f:
             json.dump(self.tasks_dict, f, indent=4)
 
-
     def view_tasks(self, status=None):
         table = PrettyTable()
         table.field_names = ["ID", "Task", "Status", "Created At", "Updated At"]
@@ -119,10 +118,7 @@ class Task:
                     self.view_tasks(status)
         else:
             print("Invalid action. Please enter 'add', 'delete', 'update', 'mark-in-progress', 'mark-done', or 'list'.")
-           
-    
-
-    
+               
 
 def main():
     f = pyfiglet.Figlet(font='small', width=80)
@@ -137,7 +133,6 @@ def main():
     task_manager = Task(tasks_dict)    
     
     task_manager.action_getter()
-
 
 main()
 
