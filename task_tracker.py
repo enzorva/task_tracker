@@ -1,5 +1,6 @@
 import pyfiglet
 import json
+import time
 
 
 class Task:
@@ -8,7 +9,7 @@ class Task:
 
     def add_task(self, task_name):
         id =  len(self.tasks_dict["tasks"]) + 1
-        self.tasks_dict["tasks"].append({"task": task_name, "id": id, "status": "todo"})
+        self.tasks_dict["tasks"].append({"task": task_name, "id": id, "status": "todo", "created_at": time.strftime("%Y-%m-%d %H:%M:%S"), "updated_at": time.strftime("%Y-%m-%d %H:%M:%S")})
 
         with open('tasks.json', 'w') as f:
             json.dump(self.tasks_dict, f, indent=4)
@@ -48,10 +49,12 @@ class Task:
     def update_task(self, id, new_task_name):
         self.tasks_dict["tasks"][id - 1]["task"] = new_task_name
         print(f"\nTask '{id}' updated to '{new_task_name}'.\n")
+        self.tasks_dict["tasks"][id - 1]["updated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
         with open('tasks.json', 'w') as f:
             json.dump(self.tasks_dict, f, indent=4)
 
     def update_status(self, id, status):
+        self.tasks_dict["tasks"][id - 1]["updated_at"] = time.strftime("%Y-%m-%d %H:%M:%S")
         match status:
             case "todo":
                 self.tasks_dict["tasks"][id - 1]["status"] = "todo"
@@ -59,6 +62,9 @@ class Task:
                 self.tasks_dict["tasks"][id - 1]["status"] = "progress"
             case "done":
                 self.tasks_dict["tasks"][id - 1]["status"] = "done"
+
+        with open('tasks.json', 'w') as f:
+            json.dump(self.tasks_dict, f, indent=4)
 
     def id_getter(self):
         try:
@@ -86,6 +92,8 @@ class Task:
             print("Invalid status. Please enter 'todo', 'progress', or 'done'.")
             return self.status_getter()
         return status 
+    
+    # def action_getter(self):
 
 
 def main():
@@ -123,7 +131,7 @@ def main():
                 task_manager.view_tasks()
             case '5':
                 status = task_manager.status_getter()
-                task_manager.view_tasks(status) # Lembrar de expecificar qual lista deseja fazer o view (todom, progress, done)
+                task_manager.view_tasks(status) 
                 id = task_manager.id_getter()
                 new_status = task_manager.status_setter()
                 task_manager.update_status(id, new_status)
