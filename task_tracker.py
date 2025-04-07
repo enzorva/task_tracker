@@ -28,6 +28,9 @@ class Task:
             task_name = self.tasks_dict["tasks"].pop(id - 1)["task"]
             print(f"\nTask '{task_name}' deleted.\n")
 
+            for id, task in enumerate(self.tasks_dict["tasks"], start=1):
+                task["id"] = id
+
             with open('tasks.json', 'w') as f:
                 json.dump(self.tasks_dict, f, indent=4)
         else:
@@ -55,7 +58,7 @@ class Task:
             print(f"Task with id '{id}' not found.")
             return self.id_getter()
         
-    # def id_update(self):
+
 
 
 def main():

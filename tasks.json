@@ -1,12 +1,16 @@
 {
     "tasks": [
         {
-            "task": "Give Aurora food and a treat",
+            "task": "Wash the car andpark it outside the house",
             "id": 1
         },
         {
-            "task": "Clean the house before noon",
-            "id": 4
+            "task": "wash the bike",
+            "id": 2
+        },
+        {
+            "task": "Wash the plane",
+            "id": 3
         }
     ]
 }
