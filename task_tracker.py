@@ -14,14 +14,23 @@ class Task:
             json.dump(self.tasks_dict, f, indent=4)
 
 
-    def view_tasks(self):
-        if self.tasks_dict["tasks"] == []:
-            print("\nNo tasks found.\n")
-        else:
-            print("\nTasks:")
+    def view_tasks(self, status=None):
+        if status is None:  
+            print("\nAll tasks:")
             for task in self.tasks_dict["tasks"]:
-                print(f"{task["id"]}. {task["task"]} - {task["status"]}")
+                print(f"{task['id']}. {task['task']} - {task['status']}")
             print("\n")
+        else:
+
+            filtered_tasks = [task for task in self.tasks_dict["tasks"] if task["status"] == status]
+
+            if not filtered_tasks:
+                print(f"\nNo tasks found with status '{status}'.\n")
+            else:
+                print(f"\nTasks with status '{status}':")
+                for task in filtered_tasks:
+                    print(f"{task['id']}. {task['task']} - {task['status']}")
+                print("\n")
             
     def delete_task(self, id):
         if 0 <= id - 1 < len(self.tasks_dict["tasks"]):
@@ -65,12 +74,18 @@ class Task:
             return self.id_getter()
         
     def status_getter(self):
-        status = input("Enter the task status (todo, progress, done): ").lower()
+        status = input("Enter the task status (todo, progress, done or press 'enter' if you want to see all): ").lower()
+        if status not in ["todo", "progress", "done" ,""]:
+            print("Invalid status. Please enter 'todo', 'progress', or 'done'.")
+            return self.status_getter()
+        return status if status != "" else None
+
+    def status_setter(self):
+        status = input("Enter the new task status (todo, progress, done: )").lower()
         if status not in ["todo", "progress", "done"]:
             print("Invalid status. Please enter 'todo', 'progress', or 'done'.")
             return self.status_getter()
-        return status
-
+        return status 
 
 
 def main():
@@ -93,7 +108,8 @@ def main():
                 task_manager.add_task(task_name)
                 task_manager.view_tasks()
             case '2':
-                task_manager.view_tasks()
+                status = task_manager.status_getter()
+                task_manager.view_tasks(status)
             case '3':
                 task_manager.view_tasks()
                 id = task_manager.id_getter()
@@ -106,10 +122,11 @@ def main():
                 task_manager.update_task(id, new_name)
                 task_manager.view_tasks()
             case '5':
-                task_manager.view_tasks() # Lembrar de expecificar qual lista deseja fazer o view (todom, progress, done)
-                id = task_manager.id_getter()
                 status = task_manager.status_getter()
-                task_manager.update_status(id, status)
+                task_manager.view_tasks(status) # Lembrar de expecificar qual lista deseja fazer o view (todom, progress, done)
+                id = task_manager.id_getter()
+                new_status = task_manager.status_setter()
+                task_manager.update_status(id, new_status)
                 task_manager.view_tasks()
             case '6':
                 print("Exiting...")
