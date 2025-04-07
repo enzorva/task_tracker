@@ -136,5 +136,9 @@ Contributions are welcome! If you'd like to contribute:
   - Filter tasks by status
   - Command-line interface for task management
 
+## Project URL
+You can find the project details and roadmap at:
+[Task Tracker Project URL](https://roadmap.sh/projects/task-tracker)
+
 ## License
 This project is licensed under the MIT License.
